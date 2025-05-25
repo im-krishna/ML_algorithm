@@ -1,10 +1,11 @@
 import numpy as np
 class myLinearRegression:
-    def __init__(self,epochs = 10,lr = 0.001):
+    def __init__(self,n_features,epochs = 10,lr = 0.001):
 
         #hyper-params
         self.lr = lr
         self.epochs = epochs 
+        self.n = n_features
 
         #dimension
         #X -> nxm
@@ -21,7 +22,7 @@ class myLinearRegression:
         X = np.array(X)
         y = np.array(y)
 
-        m,n = X.shape
+        m,_ = X.shape
         
         prev_loss = 0
         for epoch in range(self.epochs):
@@ -38,14 +39,19 @@ class myLinearRegression:
             db = (1/(2*m))*np.sum(y_pred-y)
 
             #update
-            w = w-self.lr*dw
-            b = b-self.lr*db
+            self.W = self.W-self.lr*dw
+            self.b = self.b-self.lr*db
 
 
             #termination condition
-            if loss-prev_loss<10e-8:
+            if abs(loss-prev_loss)<10e-8:
                 break
             prev_loss = loss
+    
+    def test(self,X):
+
+        X= np.array(X)
+        return np.dot(X.T,self.W) + self.b
         
 
 
